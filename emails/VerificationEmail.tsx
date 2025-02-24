@@ -15,10 +15,13 @@ interface verificationEmailProps {
   otp: string;
 }
 
-export const verificationEmail = ({
+ const verificationEmail = ({
   username,
   otp,
 }: verificationEmailProps) => {
+  console.log(
+    "username , otp " , username , otp
+  )
   return (
     <Html lang="en">
       <Head>
@@ -48,3 +51,6 @@ export const verificationEmail = ({
     </Html>
   );
 };
+
+
+export default verificationEmail

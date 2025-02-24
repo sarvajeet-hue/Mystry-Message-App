@@ -1,20 +1,33 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose';
 
+type ConnectionObject = {
+  isConnected?: number;
+};
 
-    
+const connection: ConnectionObject = {};
 
-const dbConnect = async () : Promise<void> => {
-    
-    try {
-        console.log("dv")
-        const db = await mongoose.connect(process.env.MONGODB_URI || '')
-        console.log("db" , db)
+async function dbConnect(): Promise<void> {
+  // Check if we have a connection to the database or if it's currently connecting
+  if (connection.isConnected) {
+    console.log('Already connected to the database');
+    return;
+  }
 
+  const MONGODB_URI = "mongodb://localhost:27017/nextjs"
 
-    }catch(error){
-        console.log("db not connected successfully" , error)
-    }
+  try {
+    // Attempt to connect to the database
+    const db = await mongoose.connect(MONGODB_URI || '', {});
+
+    connection.isConnected = db.connections[0].readyState;
+
+    console.log('Database connected successfully');
+  } catch (error) {
+    console.error('Database connection failed:', error);
+
+    // Graceful exit in case of a connection error
+    process.exit(1);
+  }
 }
 
-
-export default dbConnect
+export default dbConnect;

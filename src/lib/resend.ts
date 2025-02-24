@@ -1,3 +1,5 @@
 import { Resend } from 'resend';
 
-export const resend = new Resend(process.env.RESEND_API);
+const resend_URI = "re_ZZk2SMGL_8BgvermzRZa9mVeRe9zjLGuK"
+
+export const resend = new Resend(resend_URI);
