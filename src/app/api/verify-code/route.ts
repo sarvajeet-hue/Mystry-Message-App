@@ -52,7 +52,7 @@ export async function POST(request : Request) {
         
         
     }catch(error){
-        console.log("error while verifying the code " , error)
+        console.log("error while verifying the code" , error)
         return Response.json(
             {
                 success : false, 
