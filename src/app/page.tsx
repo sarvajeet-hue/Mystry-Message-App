@@ -13,7 +13,7 @@ export default function Home() {
             <Link href={"/login"}>Login</Link>
           </button>
           <button className="flex items-center justify-center px-3 py-1 border rounded-md bg-blue-300 text-white font-serif font-bold">
-          <Link href={"/signup"}>Sign Up</Link>
+          <Link href={"/sign-up"}>Sign Up</Link>
           </button>
         </div>
       </nav>
