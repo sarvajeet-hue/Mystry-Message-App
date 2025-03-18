@@ -26,6 +26,7 @@ export default function Page() {
   const [usernameMessage, setUsernameMessage] = useState("");
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [isSubmitting, setIsSubmiting] = useState(false);
+  
 
   const debounced = useDebounceCallback(setUsername, 300);
   
@@ -44,6 +45,7 @@ export default function Page() {
   useEffect(() => {
     const checkUsernameUnique = async () => {
       if (username){
+        
         setIsCheckingUsername(true);
         setUsernameMessage("");
         try {
@@ -58,6 +60,7 @@ export default function Page() {
           );
         } finally {
           setIsCheckingUsername(false);
+
         }
       }
     };
@@ -95,8 +98,8 @@ export default function Page() {
             </p>
           </div>
 
-          <FormProvider {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+          <FormProvider  {...form}>
+            <form className="grid gap-3" onSubmit={form.handleSubmit(onSubmit)}>
               <FormField
                 control={form.control}
                 name="username"
@@ -113,6 +116,12 @@ export default function Page() {
                         }}
                       />
                     </FormControl>
+                    
+                    {isCheckingUsername && <p>Loading...</p>}
+
+                    <p className={`text-sm ${usernameMessage === "Username is Unique" ? ('text-green-600') : ('text-red-500')} ` }>
+                      {usernameMessage}
+                    </p>
                     
                     <FormMessage />
                   </FormItem>
