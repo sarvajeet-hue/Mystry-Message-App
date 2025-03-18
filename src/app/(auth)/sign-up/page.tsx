@@ -1,11 +1,11 @@
-"use client";
+"use client"
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormProvider, useForm } from "react-hook-form";
 import * as z from "zod";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { useDebounceValue } from "usehooks-ts";
+import { useDebounceValue , useDebounceCallback } from "usehooks-ts";
 import { useRouter } from "next/navigation";
 import { signUpSchema } from "@/schemas/signUpSchemas";
 import axios, { AxiosError } from "axios";
@@ -27,8 +27,8 @@ export default function Page() {
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [isSubmitting, setIsSubmiting] = useState(false);
 
-  const debouncedUsername = useDebounceValue(username, 300);
-  console.log("debouncedUsername_init", debouncedUsername);
+  const debounced = useDebounceCallback(setUsername, 300);
+  
 
   const router = useRouter();
 
@@ -43,12 +43,12 @@ export default function Page() {
 
   useEffect(() => {
     const checkUsernameUnique = async () => {
-      if (debouncedUsername) {
+      if (username){
         setIsCheckingUsername(true);
         setUsernameMessage("");
         try {
           const response = await axios.get(
-            `/api/check-unique-username?username=${debouncedUsername}`
+            `/api/check-unique-username?username=${username}`
           );
           setUsernameMessage(response?.data?.message);
         } catch (error) {
@@ -62,9 +62,9 @@ export default function Page() {
       }
     };
 
-    console.log("debouncedUsername->", debouncedUsername);
-    // checkUsernameUnique();
-  }, [debouncedUsername]);
+    
+    checkUsernameUnique();
+  }, [username]);
                                                                                                              
   const onSubmit = async (data: z.infer<typeof signUpSchema>) => {
     setIsSubmiting(true);
@@ -72,7 +72,7 @@ export default function Page() {
     try {
       const dataResponse = await axios.post<apiResponse>("/api/sign-up", data);
       console.log("dataRespose" , dataResponse)
-      // router.replace(`/verify/${username}`);
+      router.replace(`/verify/${username}`);
 
       setIsSubmiting(false);
     } catch (error) {
@@ -109,7 +109,7 @@ export default function Page() {
                         {...field}
                         onChange={(e) => {
                           field.onChange(e);
-                          setUsername(e.target.value);
+                          debounced(e.target.value);
                         }}
                       />
                     </FormControl>
