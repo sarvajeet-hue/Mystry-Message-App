@@ -12,7 +12,7 @@ export default function page() {
 
               <label> 
                 Email :
-                <input className=" border-black border-2 p-2 " type="email" placeholder="email" />
+                <input type="email" placeholder="email" />
               </label>
 
         </form>

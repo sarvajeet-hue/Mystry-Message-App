@@ -29,6 +29,7 @@ export default function Page() {
   
 
   const debounced = useDebounceCallback(setUsername, 300);
+  console.log("debounced" , debounced)
   
 
   const router = useRouter();
@@ -162,7 +163,7 @@ export default function Page() {
                 {
                   isSubmitting ? (
                     <>
-                      Loading...
+                      Please Wait...
                     </>
                   ) 
                   :
