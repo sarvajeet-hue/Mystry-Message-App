@@ -15,12 +15,17 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { signIn } from "next-auth/react";
 
 export default function SignIn() {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
+    defaultValues : {
+      identifier : "" , 
+      password : ""
+    }
   });
   
 
@@ -28,8 +33,21 @@ export default function SignIn() {
     data: z.infer<
       typeof signInSchema
     > /*  {username : string , password : string}*/
-  ) => {
+  ) => {  
+    console.log("data" , data)
+    const result = await signIn('credentials' , {
+      redirect : false,
+      identifier : data.identifier , 
+      password : data.password
+    })
+    console.log("result" , result)
 
+    if(result?.error){
+      console.log("Incorrect Username or Password")
+    }
+    if(result?.url){
+      router.replace('/dashboard')
+    }
 
   };
 
@@ -47,10 +65,10 @@ export default function SignIn() {
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
             <FormField
               control={form.control}
-              name="username"
+              name="identifier"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Email/Username</FormLabel>
                   <FormControl>
                     <Input placeholder="Username" {...field} />
                   </FormControl>
