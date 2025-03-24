@@ -38,7 +38,8 @@ export default function SignIn() {
     const result = await signIn('credentials' , {
       redirect : false,
       identifier : data.identifier , 
-      password : data.password
+      password : data.password , 
+      
     })
     console.log("result" , result)
 
@@ -70,7 +71,7 @@ export default function SignIn() {
                 <FormItem>
                   <FormLabel>Email/Username</FormLabel>
                   <FormControl>
-                    <Input placeholder="Username" {...field} />
+                    <Input placeholder="Email/Username" {...field} />
                   </FormControl>
 
                   <FormMessage />
@@ -92,7 +93,7 @@ export default function SignIn() {
                 </FormItem>
               )}
             />
-            <Button type="submit">Submit</Button>
+            <Button type="submit">SignIn</Button>
           </form>
         </Form>
 
