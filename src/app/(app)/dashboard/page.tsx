@@ -25,6 +25,7 @@ import {
 } from "@/components/ui/card";
 import path from "path";
 import { User } from "next-auth";
+import { Navbar } from "@/components/Navbar";
 
 const page = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -90,13 +91,12 @@ const page = () => {
   }, [session, setValue, fetchAcceptMessage, fetchMessages]);
 
   const handleSwitchChange = async () => {
+    console.log("acceptMessage" , acceptMessages)
     try {
       const response = await axios.post<apiResponse>("/api/accept-message", {
         acceptMessages: !acceptMessages,
       });
-      console.log(
-        "response"  , response
-      )
+      
       setValue("acceptMessages", !acceptMessages);
     } catch (error) {
       console.log("error", error);
@@ -126,6 +126,8 @@ const page = () => {
   }
 
   return (
+    <>
+  
     <div className="my-8 mx-4 md:mx-8 lg:mx-auto p-6 bg-white rounded w-full max-w-6xl">
       <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
 
@@ -146,7 +148,8 @@ const page = () => {
         <Switch 
         onCheckedChange={handleSwitchChange}
         {...register('acceptMessages')}
-        checked={acceptMessages}/>
+        checked={acceptMessages}
+        disabled={isSwitchLoading}/>
         
         
         <span className="ml-2">
@@ -187,6 +190,8 @@ const page = () => {
         )}
       </div>
     </div>
+
+    </>
   );
 };
 
