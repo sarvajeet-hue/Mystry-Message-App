@@ -1,5 +1,5 @@
 "use client";
-import { Card } from '@/components/ui/card';
+
 import { Message } from "@/model/user";
 import { acceptMessageSchema } from "@/schemas/acceptMessageSchema";
 import { apiResponse } from "@/types/apiResponseType";
@@ -8,11 +8,23 @@ import axios, { AxiosError } from "axios";
 import { useSession } from "next-auth/react";
 import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { Switch } from "@/components/ui/switch"
+import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Loader2, RefreshCcw } from 'lucide-react';
-import { Separator } from "@/components/ui/separator"
-    
+import { Divide, Loader2, RefreshCcw } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
+import { toast, useToast } from "@/hooks/use-toast"
+
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import path from "path";
+import { User } from "next-auth";
 
 const page = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -33,7 +45,6 @@ const page = () => {
   const { register, watch, setValue } = useForm();
 
   const acceptMessages = watch("acceptMessages"); //this term need to be learn
-  
 
   const fetchAcceptMessage = useCallback(async () => {
     setIsSwitchLoading(true);
@@ -56,11 +67,14 @@ const page = () => {
 
       try {
         const response = await axios.get<apiResponse>("/api/get-messages");
+        console.log("response", response);
         setMessages(response.data.messages || []);
         if (refresh) {
           console.log("refresed Messages");
         }
       } catch (error) {
+        const AxiosError = error as AxiosError<apiResponse>;
+        console.log("AxiosError", AxiosError);
       } finally {
         setIsLoading(false);
         setIsSwitchLoading(false);
@@ -80,12 +94,35 @@ const page = () => {
       const response = await axios.post<apiResponse>("/api/accept-message", {
         acceptMessages: !acceptMessages,
       });
+      console.log(
+        "response"  , response
+      )
       setValue("acceptMessages", !acceptMessages);
-    } catch (error) {}
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
-  if(!session || !session.user){
-    return <div>Please Login</div>
+
+  const username = session?.user?.username ?? "Guest";
+  console.log("username" , username)
+
+  const baseUrl = `${window.location.protocol}//${window.location.host}`
+  const profileUrl = `${baseUrl}/u/${username}`
+  console.log("baseUrl" , baseUrl)
+
+
+  const copyClipBoard = () => {
+    navigator.clipboard.writeText(profileUrl)
+    toast({
+      title: "Url Copied",
+      description: "Profie URL has be Copied",
+    })
+    
+  }
+ 
+  if (!session || !session.user) {
+    return <div>Please Login</div>;
   }
 
   return (
@@ -93,33 +130,32 @@ const page = () => {
       <h1 className="text-4xl font-bold mb-4">User Dashboard</h1>
 
       <div className="mb-4">
-        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{' '}
+        <h2 className="text-lg font-semibold mb-2">Copy Your Unique Link</h2>{" "}
         <div className="flex items-center">
           <input
             type="text"
-            
+            value={profileUrl}
             disabled
             className="input input-bordered w-full p-2 mr-2"
           />
-          <Button >Copy</Button>
+          <Button onClick={copyClipBoard}>Copy</Button>
         </div>
       </div>
 
       <div className="mb-4">
-        <Switch
-
-        />
+        <Switch 
+        onCheckedChange={handleSwitchChange}
+        {...register('acceptMessages')}
+        checked={acceptMessages}/>
+        
+        
         <span className="ml-2">
-          Accept Messages: {acceptMessages ? 'On' : 'Off'}
+          Accept Messages: {acceptMessages ? "On" : "Off"}
         </span>
       </div>
       <Separator />
 
-      <Button
-        className="mt-4"
-        variant="outline"
-        
-      >
+      <Button className="mt-4" variant="outline">
         {isLoading ? (
           <Loader2 className="h-4 w-4 animate-spin" />
         ) : (
@@ -128,13 +164,26 @@ const page = () => {
       </Button>
       <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
         {messages.length > 0 ? (
-          messages.map((message, index) => (
-            <Card
-              
-            />
-          ))
+          <div>
+            {messages.map((data , index) => {
+              return (
+                <div key={index}>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Mystry Message</CardTitle>
+                      <CardDescription>Card Description</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                      <p>{data.content}</p>
+                    </CardContent>
+
+                  </Card>
+                </div>
+              );
+            })}
+          </div>
         ) : (
-          <p>No messages to display.</p>
+          <p>No Message Found</p>
         )}
       </div>
     </div>
