@@ -2,6 +2,9 @@
 
 import { Message } from "@/model/user";
 import { acceptMessageSchema } from "@/schemas/acceptMessageSchema";
+
+
+
 import { apiResponse } from "@/types/apiResponseType";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios, { AxiosError } from "axios";
@@ -68,8 +71,9 @@ const page = () => {
 
       try {
         const response = await axios.get<apiResponse>("/api/get-messages");
-        console.log("response", response);
-        setMessages(response.data.messages || []);
+        console.log("response_message",response );
+        // const messagesArray = Array.isArray(response.data.message) ? response.data.message : [];
+        setMessages(response.data.messages || [])
         if (refresh) {
           console.log("refresed Messages");
         }

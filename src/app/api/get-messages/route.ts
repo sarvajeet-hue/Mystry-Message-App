@@ -27,20 +27,22 @@ export async function GET( request : Request){
             {$unwind : '$messages'},
             {$sort : {'messages.createdAt' : -1}}, 
             {$group : {_id : '$_id' , messages : {$push : '$messages'}}}
-        ])    
+        ]).exec()    
         console.log("user" , user)
 
         if(!user || user.length === 0){
             return Response.json({
-                success : true, 
-                message : []
+                success : false, 
+                message : "Message was not found"
             } , {status: 200})
          
         }
 
         return Response.json({
             success : true, 
-            message : user[0].messages
+            message : "Message fetched Successfully" , 
+            messages : user[0].messages
+            
         })
     } catch (error) {
         return Response.json({

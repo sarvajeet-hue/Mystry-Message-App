@@ -1,3 +1,4 @@
+"use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Carousel,
@@ -7,7 +8,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Mail } from "lucide-react";
-// import Autoplay from 'embla-carousel-autoplay';
+import Autoplay from 'embla-carousel-autoplay';
 import messages from '@/messages.json'
 
 
@@ -27,7 +28,7 @@ export default function Home() {
 
         {/* Carousel for Messages */}
         <Carousel
-          // plugins={[Autoplay({ delay: 2000 })]}
+          plugins={[Autoplay({ delay: 2000 })]}
           className="w-full max-w-lg md:max-w-xl"
         >
           <CarouselContent>
@@ -55,7 +56,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="text-center p-4 md:p-6 bg-gray-900 text-white">
-        © 2023 True Feedback. All rights reserved.
+        © 2025 True Feedback. All rights reserved.
       </footer>
     </>
   );
