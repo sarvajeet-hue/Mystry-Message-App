@@ -16,6 +16,7 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
+import { toast } from "@/hooks/use-toast";
 
 export default function SignIn() {
   const router = useRouter();
@@ -48,6 +49,7 @@ export default function SignIn() {
     }
     if(result?.url){
       router.replace('/dashboard')
+      
     }
 
   };

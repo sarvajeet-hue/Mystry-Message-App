@@ -18,12 +18,16 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+import { toast, useToast } from "@/hooks/use-toast";
+
+
+
 
 const page = () => {
   const params = useParams();
   console.log("paramas", params);
   const username = params.username;
+  const { toast } = useToast()
   
     const form = useForm<z.infer<typeof messageSchema>>({
         resolver : zodResolver(messageSchema)
@@ -34,6 +38,11 @@ const page = () => {
     try{
         const response = await axios.post('/api/send-message' , {username , content})
         console.log("response" , response)
+        toast({
+            title: response.data.message,
+            variant: 'default',
+          });
+          form.reset({ ...form.getValues(), content: '' });
     }catch(error){
         const axiosError = error as AxiosError
         console.log("axiosError" , axiosError)
