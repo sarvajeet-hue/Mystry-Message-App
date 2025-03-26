@@ -170,23 +170,23 @@ const page = () => {
           <RefreshCcw className="h-4 w-4" />
         )}
       </Button>
-      <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div >
         {messages.length > 0 ? (
-          <div>
+          <div className="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
             {messages.map((data , index) => {
+              console.log("this is the data" , data)
               return (
-                <div key={index}>
-                  <Card>
+                
+                  <Card key={index}>
                     <CardHeader>
-                      <CardTitle>Mystry Message</CardTitle>
-                      <CardDescription>Card Description</CardDescription>
+                      <CardTitle>{data.content}</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p>{data.content}</p>
+                      <p>{data?.createdAt.toLocaleString()}</p>
                     </CardContent>
 
                   </Card>
-                </div>
+                
               );
             })}
           </div>

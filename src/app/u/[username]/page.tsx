@@ -19,35 +19,42 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast, useToast } from "@/hooks/use-toast";
-
-
-
+import { apiResponse } from "@/types/apiResponseType";
 
 const page = () => {
   const params = useParams();
   console.log("paramas", params);
   const username = params.username;
-  const { toast } = useToast()
-  
-    const form = useForm<z.infer<typeof messageSchema>>({
-        resolver : zodResolver(messageSchema)
-    })
+  const { toast } = useToast();
 
-  const onSubmit = async (data : z.infer<typeof messageSchema> /*data : {content : string}*/ ) => {                                          
+  const form = useForm<z.infer<typeof messageSchema>>({
+    resolver: zodResolver(messageSchema),
+  });
+
+  const onSubmit = async (
+    data: z.infer<typeof messageSchema> /*data : {content : string}*/
+  ) => {
     const content = data?.content;
-    try{
-        const response = await axios.post('/api/send-message' , {username , content})
-        console.log("response" , response)
-        toast({
-            title: response.data.message,
-            variant: 'default',
-          });
-          form.reset({ ...form.getValues(), content: '' });
-    }catch(error){
-        const axiosError = error as AxiosError
-        console.log("axiosError" , axiosError)
+    try {
+      const response = await axios.post("/api/send-message", {
+        username,
+        content,
+      });
+      console.log("response", response);
+      toast({
+        title: response.data.message,
+        variant: "default",
+      });
+      form.reset({ ...form.getValues(), content: "" });
+    } catch (error) {
+      const axiosError = error as AxiosError<apiResponse>;
+      toast({
+        title: "Error",
+        description:
+          axiosError.response?.data.message ?? "Failed to sent message",
+        variant: "destructive",
+      });
     }
-
   };
 
   return (

@@ -17,45 +17,42 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
 import { toast } from "@/hooks/use-toast";
+import Link from "next/link";
 
 export default function SignIn() {
   const router = useRouter();
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
-    defaultValues : {
-      identifier : "" , 
-      password : ""
-    }
+    defaultValues: {
+      identifier: "",
+      password: "",
+    },
   });
-  
 
   const onSubmit = async (
     data: z.infer<
       typeof signInSchema
     > /*  {username : string , password : string}*/
-  ) => {  
-    console.log("data" , data)
-    const result = await signIn('credentials' , {
-      redirect : false,
-      identifier : data.identifier , 
-      password : data.password , 
-      
-    })
-    console.log("result" , result)
+  ) => {
+    console.log("data", data);
+    const result = await signIn("credentials", {
+      redirect: false,
+      identifier: data.identifier,
+      password: data.password,
+    });
+    console.log("result", result);
 
-    if(result?.error){
-      console.log("Incorrect Username or Password")
+    if (result?.error) {
+      console.log("Incorrect Username or Password");
     }
-    if(result?.url){
-      router.replace('/dashboard')
-      
+    if (result?.url) {
+      router.replace("/dashboard");
     }
-
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-3">
+    <div className="flex justify-center items-center min-h-screen bg-gray-800 p-3">
       <div className="w-full max-w-sm sm:max-w-sm md:max-w-md lg:max-w-lg p-8 space-y-8 bg-white rounded-lg shadow-md">
         <div className="text-center">
           <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
@@ -99,7 +96,12 @@ export default function SignIn() {
           </form>
         </Form>
 
-        
+        <p>
+          Already a member?{" "}
+          <Link href={"/sign-up"} className="text-blue-600 hover:text-blue-800">
+            Sign Up
+          </Link>
+        </p>
       </div>
     </div>
   );
