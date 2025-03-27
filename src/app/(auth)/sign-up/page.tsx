@@ -20,6 +20,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useToast } from "@/hooks/use-toast";
 
 export default function Page() {
   const [username, setUsername] = useState("");
@@ -33,7 +34,7 @@ export default function Page() {
   
 
   const router = useRouter();
-
+  const {toast} = useToast()
   const form = useForm({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
@@ -77,6 +78,13 @@ export default function Page() {
       const dataResponse = await axios.post<apiResponse>("/api/sign-up", data);
       console.log("dataRespose" , dataResponse)
       router.replace(`/verify/${username}`);
+
+      toast({
+        title : "SignUp", 
+        description : "SignUp Successfully"
+      })
+
+      
 
       setIsSubmiting(false);
     } catch (error) {

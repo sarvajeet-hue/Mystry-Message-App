@@ -21,7 +21,7 @@ export const Navbar = () => {
       </a>
       {session ? (
         <>
-          <span className="mr-4">
+          <span className="mr-4 uppercase font-bold">
             Welcome, {user.username || user.email}
           </span>
           <Button onClick={() => signOut()} className="w-full md:w-auto bg-slate-100 text-black" variant='outline'>

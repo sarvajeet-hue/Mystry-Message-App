@@ -15,7 +15,7 @@ import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
 import { Divide, Loader2, RefreshCcw } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { toast, useToast } from "@/hooks/use-toast"
+import { useToast } from "@/hooks/use-toast"
 
 
 import {
@@ -26,9 +26,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import path from "path";
-import { User } from "next-auth";
-import { Navbar } from "@/components/Navbar";
 
 const page = () => {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -41,7 +38,7 @@ const page = () => {
 
   const { data: session } = useSession();
   console.log("data_session", session);
-  const {toast} = useToast()
+  const { toast } = useToast()
 
   const form = useForm({
     resolver: zodResolver(acceptMessageSchema),
@@ -76,17 +73,25 @@ const page = () => {
         // const messagesArray = Array.isArray(response.data.message) ? response.data.message : [];
         setMessages(response.data.messages || [])
         if (refresh) {
-          console.log("refresed Messages");
+          toast({
+            title: 'Refreshed Messages',
+            description: 'Showing latest messages',
+          });
         }
       } catch (error) {
         const AxiosError = error as AxiosError<apiResponse>;
-        console.log("AxiosError", AxiosError);
+        toast({
+          title: 'Error',
+          description:
+          AxiosError.response?.data.message ?? 'Failed to fetch messages',
+          variant: 'destructive',
+        });
       } finally {
         setIsLoading(false);
         setIsSwitchLoading(false);
       }
     },
-    [setIsLoading, setMessages]
+    [setIsLoading, setMessages , toast]
   );
 
   useEffect(() => {
@@ -117,14 +122,13 @@ const page = () => {
   console.log("baseUrl" , baseUrl)
 
 
-  const copyClipBoard = () => {
-    navigator.clipboard.writeText(profileUrl)
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(profileUrl);
     toast({
-      title: "Url Copied",
-      description: "Profie URL has be Copied",
-    })
-    
-  }
+      title: 'URL Copied!',
+      description: 'Profile URL has been copied to clipboard.',
+    });
+  };
  
   if (!session || !session.user) {
     return <div>Please Login</div>;
@@ -145,7 +149,7 @@ const page = () => {
             disabled
             className="input input-bordered w-full p-2 mr-2"
           />
-          <Button onClick={copyClipBoard}>Copy</Button>
+          <Button onClick={copyToClipboard}>Copy</Button>
         </div>
       </div>
 
