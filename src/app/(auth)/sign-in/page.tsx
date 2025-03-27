@@ -16,12 +16,12 @@ import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
-import { toast } from "@/hooks/use-toast";
+import { toast, useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
 export default function SignIn() {
   const router = useRouter();
-
+  const {toast} = useToast();
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -45,9 +45,19 @@ export default function SignIn() {
 
     if (result?.error) {
       console.log("Incorrect Username or Password");
+      toast({
+        title : "Sign in Failed" , 
+        description : "Incorrect Username or Password",
+        variant : "destructive"
+      })
     }
     if (result?.url) {
       router.replace("/dashboard");
+      toast({
+        title : "SignIn Successfully" , 
+        description : "Welcome to the Mystry App",
+        variant : "default"
+      })
     }
   };
 
