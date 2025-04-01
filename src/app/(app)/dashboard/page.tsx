@@ -13,7 +13,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Switch } from "@/components/ui/switch";
 import { Button } from "@/components/ui/button";
-import { Divide, Loader2, RefreshCcw } from "lucide-react";
+import { Loader2, RefreshCcw } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast"
 
@@ -21,13 +21,13 @@ import { useToast } from "@/hooks/use-toast"
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardFooter,
+
+
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 
-const page = () => {
+const Page = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isSwitchLoading, setIsSwitchLoading] = useState(false);
@@ -117,7 +117,11 @@ const page = () => {
   const username = session?.user?.username ?? "Guest";
   console.log("username" , username)
 
-  const baseUrl = `${window.location.protocol}//${window.location.host}`
+  // const baseUrl = `${window.location.protocol}//${window.location.host}`
+
+  const baseUrl = typeof window !== "undefined" 
+  ? `${window.location.protocol}//${window.location.host}` 
+  : ""; // Provide a fallback for SSR
   const profileUrl = `${baseUrl}/u/${username}`
   console.log("baseUrl" , baseUrl)
 
@@ -204,4 +208,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;

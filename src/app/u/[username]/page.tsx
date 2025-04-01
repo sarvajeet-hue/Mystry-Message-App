@@ -4,24 +4,23 @@ import { useParams } from "next/navigation";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { Label } from "@/components/ui/label";
-import { TypeOf, z } from "zod";
+
+import { z } from "zod";
 import axios, { AxiosError } from "axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { messageSchema } from "@/schemas/messageSchema";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { toast, useToast } from "@/hooks/use-toast";
+import {  useToast } from "@/hooks/use-toast";
 import { apiResponse } from "@/types/apiResponseType";
 
-const page = () => {
+const Page = () => {
   const params = useParams();
   console.log("paramas", params);
   const username = params.username;
@@ -97,4 +96,4 @@ const page = () => {
   );
 };
 
-export default page;
+export default Page;
