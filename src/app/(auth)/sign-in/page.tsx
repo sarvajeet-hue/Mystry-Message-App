@@ -12,11 +12,11 @@ import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { signInSchema } from "@/schemas/signInSchemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+import * as z from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { signIn } from "next-auth/react";
-import { toast, useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import Link from "next/link";
 
 export default function SignIn() {
@@ -30,16 +30,15 @@ export default function SignIn() {
     },
   });
 
-  const onSubmit = async (
-    data: z.infer<
-      typeof signInSchema
-    > /*  {username : string , password : string}*/
-  ) => {
+  const onSubmit = async (data : z.infer<typeof signInSchema>) => {
     console.log("data", data);
     const result = await signIn("credentials", {
       redirect: false,
       identifier: data.identifier,
       password: data.password,
+      callbackUrl: "/dashboard",
+      
+
     });
     console.log("result", result);
 
