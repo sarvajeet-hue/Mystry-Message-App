@@ -37,8 +37,6 @@ export default function SignIn() {
       identifier: data.identifier,
       password: data.password,
       callbackUrl: "/dashboard",
-      
-
     });
     console.log("result", result);
 
