@@ -36,7 +36,7 @@ export default function SignIn() {
       redirect: false,
       identifier: data.identifier,
       password: data.password,
-      callbackUrl: "/dashboard",
+      
     });
     console.log("result", result);
 
@@ -49,6 +49,7 @@ export default function SignIn() {
       })
     }
     if (result?.url) {
+      console.log("result_url" , result?.url)
       router.replace("/dashboard");
       toast({
         title : "SignIn Successfully" , 
