@@ -13,7 +13,7 @@ async function dbConnect(): Promise<void> {
     return;
   }
 
-  const MONGODB_URI = "mongodb://localhost:27017/nextjs"
+  const MONGODB_URI = process.env.MONGO_URI
 
   try {
     // Attempt to connect to the database
