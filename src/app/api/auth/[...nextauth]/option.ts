@@ -27,10 +27,10 @@ export const authOptions: NextAuthOptions = {
           });
       
           if (!user) {
-            throw new Error("No user found with this email or username.");
+            return Promise.reject(new Error(JSON.stringify({ message: "No user found" })));
           }
           if (!user.isVerified) {
-            throw new Error("Please verify your account before logging in.");
+            return Promise.reject(new Error(JSON.stringify({ message: "Please verify your account" })));
           }
       
           const isPasswordCorrect = await bcrypt.compare(
@@ -38,15 +38,16 @@ export const authOptions: NextAuthOptions = {
             user.password
           );
           if (!isPasswordCorrect) {
-            throw new Error("Incorrect password.");
+            return Promise.reject(new Error(JSON.stringify({ message: "Incorrect password" })));
           }
       
           return user;
         } catch (error: any) {
-          console.error("Auth error:", error.message);
-          throw new Error("Authentication failed: " + error.message);
+          console.error("Auth error:", error);
+          return Promise.reject(new Error(JSON.stringify({ message: "Authentication failed" })));
         }
       }
+      
       
     }),
   ],
