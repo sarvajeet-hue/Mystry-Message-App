@@ -25,26 +25,29 @@ export const authOptions: NextAuthOptions = {
               { email: credentials.identifier },
             ],
           });
+      
           if (!user) {
-            throw new Error("No user found by this email");
+            throw new Error("No user found with this email or username.");
           }
           if (!user.isVerified) {
-            throw new Error("Please verify your account before login");
+            throw new Error("Please verify your account before logging in.");
           }
-
+      
           const isPasswordCorrect = await bcrypt.compare(
             credentials.password,
             user.password
           );
-          if (isPasswordCorrect) {
-            return user;
-          } else {
-            throw new Error("Incorrect Password");
+          if (!isPasswordCorrect) {
+            throw new Error("Incorrect password.");
           }
+      
+          return user;
         } catch (error: any) {
-          throw new Error(error);
+          console.error("Auth error:", error.message);
+          throw new Error("Authentication failed: " + error.message);
         }
-      },
+      }
+      
     }),
   ],
   callbacks: {
