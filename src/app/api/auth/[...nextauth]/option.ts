@@ -16,9 +16,9 @@ export const authOptions: NextAuthOptions = {
       },
 
       async authorize(credentials: any): Promise<any> {
-        await dbConnect();
-        console.log("credentials", credentials);
         try {
+          await dbConnect();
+      
           const user = await UserModel.findOne({
             $or: [
               { username: credentials.identifier },
@@ -26,27 +26,31 @@ export const authOptions: NextAuthOptions = {
             ],
           });
       
-          if (!user) {
-            throw new Error("No user found with this email or username.");
-          }
-          if (!user.isVerified) {
-            throw new Error("Please verify your account before logging in.");
+          if (!user || !user.isVerified) {
+            return null; // Fail gracefully
           }
       
           const isPasswordCorrect = await bcrypt.compare(
             credentials.password,
             user.password
           );
+      
           if (!isPasswordCorrect) {
-            throw new Error("Incorrect password.");
+            return null;
           }
       
-          return user;
-        } catch (error: any) {
-          console.error("Auth error:", error.message);
-          throw new Error("Authentication failed: " + error.message);
+          return {
+            _id: user._id.toString(),
+            username: user.username,
+            isVerified: user.isVerified,
+            isAcceptingMessages: user.isAcceptingMessages
+          };
+        } catch (err) {
+          console.error("Authorization error:", err);
+          return null; // Always fail gracefully in production
         }
       }
+      
       
     }),
   ],
